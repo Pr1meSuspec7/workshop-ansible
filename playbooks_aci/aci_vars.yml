@@ -1,6 +1,6 @@
 ---
 tenant:
-  tenant_name: ANSIBLE-TEST-2
+  tenant_name: ANSIBLE-WORKSHOP
   tenant_desc: Deployed by ANSIBLE
 
 vrf:
