@@ -1,0 +1,20 @@
+---
+tenant:
+  tenant_name: ANSIBLE-TEST-2
+  tenant_desc: Deployed by ANSIBLE
+
+vrf:
+  vrf_name: ansible_vrf
+
+bd:
+  bd_name: ansible-network-1_bd
+  bd_unicast: no
+
+ap:
+  ap_name: ansible_ap
+
+epg:
+  epg_name:
+    - web
+    - app
+    - db

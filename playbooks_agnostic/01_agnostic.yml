@@ -1,0 +1,72 @@
+---
+- name: "PLAY 1: CONFIGURING NETWORK DEVICE"
+  hosts: csrv_esx
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+
+    - name: "TASK 1: Configuring Loopbacks"
+      ansible.netcommon.cli_config:
+        config: |
+          interface Loopback51
+           ip address 192.168.51.1 255.255.255.255
+          
+          interface Loopback52
+           ip address 192.168.52.1 255.255.255.255
+          
+          interface Loopback53
+           ip address 192.168.53.1 255.255.255.255
+          
+
+    - name: "TASK 2: Configuring prefix-list"
+      ansible.netcommon.cli_config:
+        config: |
+          ip prefix-list ANSIBLE-PREFIX seq 5 permit 1.1.1.1/32
+          ip prefix-list ANSIBLE-PREFIX seq 10 permit 2.2.2.2/32
+          ip prefix-list ANSIBLE-PREFIX seq 15 permit 3.3.3.3/32
+
+          
+    - name: "TASK 3: Configuring route-map"
+      ansible.netcommon.cli_config:
+        config: |
+          route-map ANSIBLE permit 10 
+           match ip address prefix-list ANSIBLE-PREFIX
+           set local-preference 150
+
+
+    - name: "TASK 4: Configuring OSPF 100"
+      ansible.netcommon.cli_config:
+        config: |
+          router ospf 100
+           router-id 172.17.1.99
+           redistribute static metric-type 1 subnets
+           network 192.168.51.0 0.0.0.255 area 0
+           network 192.168.52.0 0.0.0.255 area 0
+           network 192.168.53.0 0.0.0.255 area 0
+
+
+    - name: "TASK 5: Configuring eBGP 45000"
+      ansible.netcommon.cli_config:
+        config: |
+          router bgp 45000
+           bgp router-id 172.17.1.99
+           bgp log-neighbor-changes
+           no bgp default ipv4-unicast
+           timers bgp 70 120
+           neighbor 192.168.1.2 remote-as 40000
+           neighbor 192.168.3.2 remote-as 50000
+           neighbor 192.168.3.2 description finance
+           !
+           address-family ipv4
+            network 172.17.1.0 mask 255.255.255.0
+            neighbor 192.168.1.2 activate
+            neighbor 192.168.1.2 route-map ANSIBLE in
+            neighbor 192.168.3.2 activate
+           exit-address-family
+
+
+    - name: "TASK 6: Configuring with file"
+      ansible.netcommon.cli_config:
+        config: "{{ lookup('file', 'loopbacks-61_62_63.txt') }}"
+        diff_match: line

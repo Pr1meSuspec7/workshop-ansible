@@ -1,0 +1,31 @@
+---
+- name: "PLAY 4: CONFIGURATION ACI FABRIC"
+  hosts: apic
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: "TASK 1: ENABLE UNICAST ROUTING"
+      cisco.aci.aci_bd:
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: no
+        tenant: ANSIBLE-WORKSHOP
+        bd: workshop-network-1_bd
+        enable_routing: yes
+        state: present
+
+
+    - name: "TASK 2: ADD SUBNET TO BD"
+      cisco.aci.aci_bd_subnet:
+        host: "{{ inventory_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        tenant: ANSIBLE-WORKSHOP
+        bd: workshop-network-1_bd
+        gateway: 10.1.101.1
+        mask: 24
+        preferred: yes
+        state: present

@@ -1,0 +1,19 @@
+---
+all:
+  hosts:
+  children:
+    nexus_sandbox:
+      hosts:
+        sbx-nxos-mgmt.cisco.com:
+    ios_xe_sandbox:
+      hosts:
+        ios-xe-mgmt.cisco.com:
+    apic:
+      hosts:
+        sandboxapicdc.cisco.com:
+    csrv_esx:
+      hosts:
+        192.168.178.203:
+    nexus_esx:
+      hosts:
+        192.168.178.202:

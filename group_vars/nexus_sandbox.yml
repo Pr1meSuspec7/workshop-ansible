@@ -1,0 +1,6 @@
+---
+ansible_network_os: "nxos"
+ansible_user: "admin"
+ansible_password: "Admin_1234!"
+ansible_port: 8181
+ansible_python_interpreter: "~/workshop-ansible/py3_ansible_venv/bin/python"

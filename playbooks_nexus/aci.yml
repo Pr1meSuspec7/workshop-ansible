@@ -1,0 +1,181 @@
+---
+- name: "PLAY 2: CONFIGURATION ACI FABRIC"
+  hosts: apic
+  connection: local
+  gather_facts: False
+  vars:
+    apic_info: &apic_info
+      host: "{{ inventory_hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      validate_certs: no
+
+  tasks:
+
+    - name: "TASK 1: CREATE TENANT"
+      cisco.aci.aci_tenant:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        description: Deployed by ANSIBLE
+
+
+    - name: "TASK 2: CREATE VRF"
+      cisco.aci.aci_vrf:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        vrf: workshop_vrf
+
+
+    - name: "TASK 3: CREATE BRIDGE DOMAIN"
+      cisco.aci.aci_bd:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        vrf: workshop_vrf
+        bd: workshop-network-1_bd
+        enable_routing: no
+
+
+    - name: "TASK 4: CREATE APPLICATION PROFILE"
+      cisco.aci.aci_ap:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+
+
+    - name: "TASK 5: CREATE EPGs"
+      cisco.aci.aci_epg:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+        bd: workshop-network-1_bd
+        epg: "{{ item }}"
+      with_items:
+        - web
+        - app
+        - db
+
+
+    - name: "TASK 6: CREATE WEB-TO-APP CONTRACT"
+      cisco.aci.aci_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: web_to_app_ct
+
+
+    - name: "TASK 7: CREATE WEB-TO-APP SUBJECT"
+      cisco.aci.aci_contract_subject:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: web_to_app_ct
+        subject: SBJ
+        reverse_filter: yes
+
+
+    - name: "TASK 8: BIND WEB-TO-APP SBJ + FILT"
+      cisco.aci.aci_contract_subject_to_filter:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: web_to_app_ct
+        subject: SBJ
+        filter: web_to_app_filt
+
+
+    - name: "TASK 9: CREATE WEB-TO-APP FILTER"
+      cisco.aci.aci_filter:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        filter: web_to_app_filt
+
+
+    - name: "TASK 9: CREATE WEB-TO-APP FILTER ENTRY"
+      cisco.aci.aci_filter_entry:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        filter: web_to_app_filt
+        entry: tomcat
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port: "9090"
+
+
+    - name: "TASK 10: CREATE APP-TO-DB CONTRACT"
+      cisco.aci.aci_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: app_to_db_ct
+
+
+    - name: "TASK 11: CREATE APP-TO-DB SUBJECT"
+      cisco.aci.aci_contract_subject:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: app_to_db_ct
+        subject: SBJ
+        reverse_filter: yes
+
+
+    - name: "TASK 12: BIND APP-TO-DB SBJ + FILT"
+      cisco.aci.aci_contract_subject_to_filter:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        contract: app_to_db_ct
+        subject: SBJ
+        filter: app_to_db_filt
+
+
+    - name: "TASK 13: CREATE APP-TO-DB FILTER"
+      cisco.aci.aci_filter:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        filter: app_to_db_filt
+
+
+    - name: "TASK 14: CREATE APP-TO-DB FILTER ENTRY"
+      cisco.aci.aci_filter_entry:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        filter: app_to_db_filt
+        entry: mysql
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port: "3306"
+
+
+    - name: "TASK 15: INSTALL WEB CONSUMER CONTRACT"
+      cisco.aci.aci_epg_to_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+        epg: web
+        contract: web_to_app_ct
+        contract_type: consumer
+
+
+    - name: "TASK 16: ISNTALL APP PROVIDER CONTRACT"
+      cisco.aci.aci_epg_to_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+        epg: app
+        contract: web_to_app_ct
+        contract_type: provider
+
+
+    - name: "TASK 16: INSTALL APP CONSUMER CONTRACT"
+      cisco.aci.aci_epg_to_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+        epg: app
+        contract: app_to_db_ct
+        contract_type: consumer
+
+
+    - name: "TASK 16: INSTALL DB PROVIDER CONTRACT"
+      cisco.aci.aci_epg_to_contract:
+        <<: *apic_info
+        tenant: ANSIBLE-WORKSHOP
+        ap: workshop_ap
+        epg: db
+        contract: app_to_db_ct
+        contract_type: provider

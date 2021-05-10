@@ -1,0 +1,142 @@
+---
+- name: "PLAY 1: CONFIGURING CSR ROUTER"
+  hosts: csrv_esx
+  connection: network_cli
+  tasks:
+
+
+######################################## TASK ##############################################
+
+    - name: "TASK 1a: CREATE LOOPBACK 101, 102, 103, 104"
+      cisco.ios.ios_interfaces:
+        config:
+          - name: Loopback101
+          - name: Loopback102
+          - name: Loopback103
+          - name: Loopback104
+
+    - name: "TASK 1b: IP ADDRESS 101, 102, 103, 999"
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: Loopback101
+            ipv4: 
+            - address: 10.10.101.1/32
+          - name: Loopback102
+            ipv4: 
+            - address: 10.10.102.1/32
+          - name: Loopback103
+            ipv4: 
+            - address: 10.10.103.1/32
+          - name: Loopback104
+            ipv4:
+              - address: 10.1.104.1/24
+
+
+      register: cli_result_task1
+
+#    - name: "TASK 1c: OUTPUT"
+#      debug:
+#        msg: "{{ cli_result_task1.commands }}"
+
+
+######################################## TASK ##############################################
+
+    - name: "TASK 2: CREATE ACLs"
+      cisco.ios.ios_config:
+        lines:
+        - permit tcp any host 1.1.1.1 eq 22
+        - permit tcp any host 2.2.2.2 eq 80
+        - permit tcp any host 3.3.3.3 eq 443
+        parents: ip access-list extended ANSIBLE-ACL
+
+                
+      register: cli_result_task2
+
+#    - name: "TASK 2b: OUTPUT"
+#      debug:
+#        msg: "{{ cli_result_task2.commands }}"
+
+######################################## TASK ##############################################
+
+    - name: "TASK 3a: CONFIGURE ROUTER BGP AS 64496"
+      cisco.ios.ios_bgp:
+        config:
+          bgp_as: 64496
+          router_id: 192.0.2.1
+          log_neighbor_changes: true
+          neighbors:
+          - neighbor: 203.0.113.5
+            remote_as: 64511
+            timers:
+              keepalive: 300
+              holdtime: 360
+              min_neighbor_holdtime: 360
+          - neighbor: 198.51.100.2
+            remote_as: 64498
+          networks:
+          - prefix: 198.51.100.0
+            route_map: RMAP_1
+          - prefix: 192.0.2.0
+            masklen: 23
+          address_family:
+          - afi: ipv4
+            safi: unicast
+            redistribute:
+            - protocol: ospf
+              id: "223"
+              metric: 10
+        operation: merge
+
+      register: cli_result_task3
+
+
+#    - name: "TASK 3b: OUTPUT"
+#      debug:
+#        msg: "{{ cli_result_task3.commands }}"
+
+######################################## TASK ##############################################
+
+    - name: "TASK 4a: CREATE STATIC ROUTEs"
+      cisco.ios.ios_static_routes:
+        config:
+          - address_families:
+            - afi: ipv4
+              routes:
+                - dest: 99.99.99.99/32
+                  next_hops:
+                  - forward_router_address: null0
+                    name: ANSIBLE-ROUTE
+
+      register: cli_result_task4
+
+#    - name: "TASK 4b: OUTPUT"
+#      debug:
+#        msg: "{{ cli_result_task4.commands }}"
+
+
+######################################## TASK ##############################################
+
+#    - name: "TASK 5: OUTPUT"
+#      debug:
+#        msg: "{{ item }}"
+#      with_items:
+#        - "{{ cli_result_task1.commands }}"
+#        - "{{ cli_result_task2.commands }}"
+#        - "{{ cli_result_task3.commands }}"
+#        - "{{ cli_result_task4.commands }}"
+
+    - name: "TASK 1c: OUTPUT"
+      debug:
+        msg: "{{ cli_result_task1.commands }}"
+
+    - name: "TASK 2b: OUTPUT"
+      debug:
+        msg: "{{ cli_result_task2.commands }}"
+
+    - name: "TASK 3b: OUTPUT"
+      debug:
+        msg: "{{ cli_result_task3.commands }}"
+
+    - name: "TASK 4b: OUTPUT"
+      debug:
+        msg: "{{ cli_result_task4.commands }}"
