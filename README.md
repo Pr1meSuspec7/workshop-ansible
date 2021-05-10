@@ -49,6 +49,7 @@ Sul prompt dovrebbe apparire il nome del virtualenv:<br>
 * installare i moduli Ansible necessari<br>
 `$ ansible-galaxy collection install cisco.nxos`<br>
 `$ ansible-galaxy collection install cisco.aci`<br>
+`$ ansible-galaxy collection install cisco.ios`<br>
 `$ ansible-galaxy collection install ansible.netcommon`
 
 ### Installazione VM Cisco csr1000v (facoltativo)
