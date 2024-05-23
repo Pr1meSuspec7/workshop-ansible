@@ -1,5 +1,0 @@
----
-### DEVNET sandbox
-username: "admin"
-password: "ciscopsdt"
-ansible_python_interpreter: "~/workshop-ansible/py3_ansible_venv/bin/python"

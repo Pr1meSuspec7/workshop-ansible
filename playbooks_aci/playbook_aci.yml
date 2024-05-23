@@ -2,13 +2,13 @@
 - name: "PLAY 2: CONFIGURATION ACI FABRIC"
   hosts: apic
   connection: local
-  gather_facts: False
+  gather_facts: false
   vars:
     apic_info: &apic_info
       host: "{{ inventory_hostname }}"
       username: "{{ username }}"
       password: "{{ password }}"
-      validate_certs: no
+      validate_certs: false
   vars_files:
     - aci_vars.yml
 
@@ -67,7 +67,7 @@
         tenant: "{{ tenant.tenant_name }}"
         contract: web_to_app_ct
         subject: SBJ
-        reverse_filter: yes
+        reverse_filter: true
 
 
     - name: "TASK 8: BIND WEB-TO-APP SBJ + FILT"
@@ -110,7 +110,7 @@
         tenant: "{{ tenant.tenant_name }}"
         contract: app_to_db_ct
         subject: SBJ
-        reverse_filter: yes
+        reverse_filter: true
 
 
     - name: "TASK 12: BIND APP-TO-DB SBJ + FILT"

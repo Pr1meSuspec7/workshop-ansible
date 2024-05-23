@@ -1,0 +1,4 @@
+---
+username: "admin"
+password: "simulator"
+ansible_python_interpreter: $(which python)

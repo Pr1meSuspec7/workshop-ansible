@@ -1,0 +1,7 @@
+loopbacks:
+  - Lo: Loopback71
+    Ip_mask: 192.168.71.1 255.255.255.255
+  - Lo: Loopback72
+    Ip_mask: 192.168.72.1 255.255.255.255
+  - Lo: Loopback73
+    Ip_mask: 192.168.73.1 255.255.255.255

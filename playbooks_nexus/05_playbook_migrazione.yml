@@ -1,5 +1,0 @@
----
-- name: "Playbook_1"
-  import_playbook: 03_playbook_shutdown_vlan.yml
-- name: "Playbook_2"
-  import_playbook: 04_playbook_aci_add_subnet.yml

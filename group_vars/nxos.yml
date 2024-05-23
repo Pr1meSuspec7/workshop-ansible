@@ -3,4 +3,4 @@ ansible_network_os: "nxos"
 ansible_user: "admin"
 ansible_password: "admin"
 #ansible_port: 8181
-ansible_python_interpreter: "~/workshop-ansible/py3_ansible_venv/bin/python"
+ansible_python_interpreter: $(which python)

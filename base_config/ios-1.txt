@@ -1,0 +1,25 @@
+!
+hostname IOS-1
+!
+no ip domain lookup
+ip domain name ntt.lab
+!
+username admin privilege 15 password 0 admin
+!
+interface GigabitEthernet0/0
+ ip address 10.164.80.101 255.255.255.0
+ no shutdown
+!
+ip route 0.0.0.0 0.0.0.0 10.164.80.254
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
+crypto key generate rsa modulus 1024
+!
+end
