@@ -12,7 +12,7 @@
     - name: Loopbacks configuration
       ansible.netcommon.cli_config:
         config: "{{ lookup('template', 'loopbacks.j2') }}"
-
+      when: inventory_hostname == 'IOS1'
 
 #    - name: Loop
 #      ansible.builtin.template:

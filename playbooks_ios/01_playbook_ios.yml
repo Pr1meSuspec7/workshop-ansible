@@ -7,31 +7,48 @@
   tasks:
 
 
-    - name: "CREATE LOOPBACK 101, 102, 103, 104"
+    - name: "CREATE LOOPBACK 101 ON IOS1"
       cisco.ios.ios_interfaces:
         config:
           - name: Loopback101
+      when: inventory_hostname == 'IOS1'
+
+    - name: "CREATE LOOPBACK 102 ON IOS2"
+      cisco.ios.ios_interfaces:
+        config:
           - name: Loopback102
+      when: inventory_hostname == 'IOS2'
+
+    - name: "CREATE LOOPBACK 103 ON IOS3"
+      cisco.ios.ios_interfaces:
+        config:
           - name: Loopback103
-          - name: Loopback104
+      when: inventory_hostname == 'IOS3'
 
 
-    - name: "IP ADDRESS 101, 102, 103, 104"
+    - name: "IP ADDRESS 101"
       cisco.ios.ios_l3_interfaces:
         config:
           - name: Loopback101
             ipv4:
               - address: 10.10.101.1/32
+      when: inventory_hostname == 'IOS1'
+
+    - name: "IP ADDRESS 102"
+      cisco.ios.ios_l3_interfaces:
+        config:
           - name: Loopback102
             ipv4:
               - address: 10.10.102.1/32
+      when: inventory_hostname == 'IOS2'
+
+    - name: "IP ADDRESS 103"
+      cisco.ios.ios_l3_interfaces:
+        config:
           - name: Loopback103
             ipv4:
               - address: 10.10.103.1/32
-          - name: Loopback104
-            ipv4:
-              - address: 10.1.104.1/24
-      register: cli_result_task1
+      when: inventory_hostname == 'IOS3'
 
 
     - name: "CONFIGURE ROUTER BGP"
@@ -69,11 +86,3 @@
 #    - name: "OUTPUT"
 #      ansible.builtin.debug:
 #        msg: "{{ cli_result_task1.commands }}"
-
-#    - name: "OUTPUT"
-#      ansible.builtin.debug:
-#        msg: "{{ cli_result_task3.commands }}"
-
-#    - name: "OUTPUT"
-#      ansible.builtin.debug:
-#        msg: "{{ cli_result_task4.commands }}"

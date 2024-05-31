@@ -8,19 +8,6 @@
   tasks:
 
 
-    - name: "Configuring Loopbacks"
-      ansible.netcommon.cli_config:
-        config: |
-          interface Loopback51
-           ip address 192.168.51.1 255.255.255.255
-
-          interface Loopback52
-           ip address 192.168.52.1 255.255.255.255
-
-          interface Loopback53
-           ip address 192.168.53.1 255.255.255.255
-
-
     - name: "Configuring prefix-list"
       ansible.netcommon.cli_config:
         config: |
@@ -35,17 +22,6 @@
           route-map ANSIBLE permit 10
            match ip address prefix-list ANSIBLE-PREFIX
            set local-preference 150
-
-
-    - name: "Configuring OSPF 100"
-      ansible.netcommon.cli_config:
-        config: |
-          router ospf 100
-           router-id 172.17.1.99
-           redistribute static metric-type 1 subnets
-           network 192.168.51.0 0.0.0.255 area 0
-           network 192.168.52.0 0.0.0.255 area 0
-           network 192.168.53.0 0.0.0.255 area 0
 
 
     - name: "Configuring eBGP 45000"
