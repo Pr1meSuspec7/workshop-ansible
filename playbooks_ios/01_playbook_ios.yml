@@ -51,25 +51,6 @@
       when: inventory_hostname == 'IOS3'
 
 
-    - name: "CONFIGURE ROUTER BGP"
-      cisco.ios.ios_bgp_global:
-        config:
-          as_number: 64496
-#          as_number: 45000
-          bgp:
-            router_id:
-              address: 192.0.2.1
-            log_neighbor_changes: true
-          neighbors:
-            - address: 203.0.113.5
-              remote_as: 64511
-              route_map:
-                name: RMAP_1
-                out: true
-        state: merged
-      register: cli_result_task3
-
-
     - name: "CREATE STATIC ROUTEs"
       cisco.ios.ios_static_routes:
         config:
@@ -80,9 +61,9 @@
                     next_hops:
                       - forward_router_address: null0
                         name: ANSIBLE-ROUTE
-      register: cli_result_task4
+      register: cli_result
 
 
 #    - name: "OUTPUT"
 #      ansible.builtin.debug:
-#        msg: "{{ cli_result_task1.commands }}"
+#        msg: "{{ cli_result.commands }}"
