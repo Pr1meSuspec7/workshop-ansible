@@ -1,0 +1,27 @@
+---
+- name: "CONFIGURING NETWORK DEVICE"
+  hosts: ios
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    system_administrator: administrator@acme.com
+
+
+  tasks:
+
+    - name: Remove old banners
+      cisco.ios.ios_banner:
+        banner: "{{ item }}"
+        state: absent
+      loop:
+        - login
+        - motd
+        - exec
+        - incoming
+
+    - name: Configure the login banner
+      cisco.ios.ios_banner:
+        banner: login
+        multiline_delimiter: ^
+        text: "{{ lookup('template', 'motd.j2') }}"
+        state: present
