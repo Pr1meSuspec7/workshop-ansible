@@ -2,18 +2,23 @@
 all:
   hosts:
   children:
-    nexus_sandbox:
-      hosts:
-        sbx-nxos-mgmt.cisco.com:
-    ios_xe_sandbox:
-      hosts:
-        ios-xe-mgmt.cisco.com:
     apic:
       hosts:
-        sandboxapicdc.cisco.com:
-    csrv_esx:
+        apicsim.ntt.lab:
+    ios:
       hosts:
-        192.168.178.203:
-    nexus_esx:
+        IOS1:
+          ansible_host: 10.164.80.101
+          site: Milano
+        IOS2:
+          ansible_host: 10.164.80.102
+          site: Roma
+        IOS3:
+          ansible_host: 10.164.80.103
+          site: Torino
+    nxos:
       hosts:
-        192.168.178.202:
+        10.164.80.104:
+    csrv:
+      hosts:
+        10.164.80.105:
