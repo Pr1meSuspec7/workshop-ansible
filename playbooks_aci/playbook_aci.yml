@@ -14,21 +14,21 @@
 
   tasks:
 
-    - name: "TASK 1: CREATE TENANT"
+    - name: "CREATE TENANT"
       cisco.aci.aci_tenant:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         description: "{{ tenant.tenant_desc }}"
 
 
-    - name: "TASK 2: CREATE VRF"
+    - name: "CREATE VRF"
       cisco.aci.aci_vrf:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         vrf: "{{ vrf.vrf_name }}"
 
 
-    - name: "TASK 3: CREATE BRIDGE DOMAIN"
+    - name: "CREATE BRIDGE DOMAIN"
       cisco.aci.aci_bd:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -37,14 +37,14 @@
         enable_routing: "{{ bd.bd_unicast }}"
 
 
-    - name: "TASK 4: CREATE APPLICATION PROFILE"
+    - name: "CREATE APPLICATION PROFILE"
       cisco.aci.aci_ap:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         ap: "{{ ap.ap_name }}"
 
 
-    - name: "TASK 5: CREATE EPGs"
+    - name: "CREATE EPGs"
       cisco.aci.aci_epg:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -54,14 +54,14 @@
       with_items: "{{ epg.epg_name }}"
 
 
-    - name: "TASK 6: CREATE WEB-TO-APP CONTRACT"
+    - name: "CREATE WEB-TO-APP CONTRACT"
       cisco.aci.aci_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         contract: web_to_app_ct
 
 
-    - name: "TASK 7: CREATE WEB-TO-APP SUBJECT"
+    - name: "CREATE WEB-TO-APP SUBJECT"
       cisco.aci.aci_contract_subject:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -70,7 +70,7 @@
         reverse_filter: true
 
 
-    - name: "TASK 8: BIND WEB-TO-APP SBJ + FILT"
+    - name: "BIND WEB-TO-APP SBJ + FILT"
       cisco.aci.aci_contract_subject_to_filter:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -79,14 +79,14 @@
         filter: web_to_app_filt
 
 
-    - name: "TASK 9: CREATE WEB-TO-APP FILTER"
+    - name: "CREATE WEB-TO-APP FILTER"
       cisco.aci.aci_filter:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         filter: web_to_app_filt
 
 
-    - name: "TASK 9: CREATE WEB-TO-APP FILTER ENTRY"
+    - name: "CREATE WEB-TO-APP FILTER ENTRY"
       cisco.aci.aci_filter_entry:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -97,14 +97,14 @@
         dst_port: "9090"
 
 
-    - name: "TASK 10: CREATE APP-TO-DB CONTRACT"
+    - name: "CREATE APP-TO-DB CONTRACT"
       cisco.aci.aci_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         contract: app_to_db_ct
 
 
-    - name: "TASK 11: CREATE APP-TO-DB SUBJECT"
+    - name: "CREATE APP-TO-DB SUBJECT"
       cisco.aci.aci_contract_subject:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -113,7 +113,7 @@
         reverse_filter: true
 
 
-    - name: "TASK 12: BIND APP-TO-DB SBJ + FILT"
+    - name: "BIND APP-TO-DB SBJ + FILT"
       cisco.aci.aci_contract_subject_to_filter:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -122,14 +122,14 @@
         filter: app_to_db_filt
 
 
-    - name: "TASK 13: CREATE APP-TO-DB FILTER"
+    - name: "CREATE APP-TO-DB FILTER"
       cisco.aci.aci_filter:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
         filter: app_to_db_filt
 
 
-    - name: "TASK 14: CREATE APP-TO-DB FILTER ENTRY"
+    - name: "CREATE APP-TO-DB FILTER ENTRY"
       cisco.aci.aci_filter_entry:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -140,7 +140,7 @@
         dst_port: "3306"
 
 
-    - name: "TASK 15: INSTALL WEB CONSUMER CONTRACT"
+    - name: "INSTALL WEB CONSUMER CONTRACT"
       cisco.aci.aci_epg_to_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -150,7 +150,7 @@
         contract_type: consumer
 
 
-    - name: "TASK 16: ISNTALL APP PROVIDER CONTRACT"
+    - name: "ISNTALL APP PROVIDER CONTRACT"
       cisco.aci.aci_epg_to_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -160,7 +160,7 @@
         contract_type: provider
 
 
-    - name: "TASK 16: INSTALL APP CONSUMER CONTRACT"
+    - name: "INSTALL APP CONSUMER CONTRACT"
       cisco.aci.aci_epg_to_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
@@ -170,7 +170,7 @@
         contract_type: consumer
 
 
-    - name: "TASK 16: INSTALL DB PROVIDER CONTRACT"
+    - name: "INSTALL DB PROVIDER CONTRACT"
       cisco.aci.aci_epg_to_contract:
         <<: *apic_info
         tenant: "{{ tenant.tenant_name }}"
