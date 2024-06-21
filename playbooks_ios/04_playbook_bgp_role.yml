@@ -1,0 +1,9 @@
+---
+- name: "CONFIGURING BGP WITH ANSIBLE ROLE"
+  hosts: ios
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+
+
+  roles:
+    - bgp-ios-demo

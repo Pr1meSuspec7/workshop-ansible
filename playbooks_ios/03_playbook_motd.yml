@@ -1,5 +1,5 @@
 ---
-- name: "CONFIGURING NETWORK DEVICE"
+- name: "CONFIGURING BANNER WITH J2 TEMPLATE"
   hosts: ios
   gather_facts: false
   connection: ansible.netcommon.network_cli
@@ -14,7 +14,6 @@
         banner: "{{ item }}"
         state: absent
       loop:
-        - login
         - motd
         - exec
         - incoming

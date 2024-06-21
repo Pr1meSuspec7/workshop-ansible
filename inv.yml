@@ -16,6 +16,9 @@ all:
         IOS3:
           ansible_host: 10.164.80.103
           site: Torino
+        IOS4:
+          ansible_host: 10.164.80.104
+          site: Venezia
     nxos:
       hosts:
         10.164.80.104:

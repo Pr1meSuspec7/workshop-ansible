@@ -1,0 +1,26 @@
+---
+# tasks file for bgp-ios-demo
+
+- name: "CONFIGURE ROUTER BGP"
+  cisco.ios.ios_bgp_global:
+    config:
+      as_number: "{{ item.as_number }}"
+      bgp:
+        router_id:
+          address: "{{ item.router_id }}"
+        log_neighbor_changes: true
+      neighbors:
+        - address: "{{ item.neighbor }}"
+          remote_as: "{{ item.remote_as }}"
+          soft_reconfiguration: "{{ item.soft }}"
+          send_community:
+            both: true
+          next_hop_self:
+            set: true
+      redistribute:
+        - connected:
+            set: true
+    state: merged
+  when: inventory_hostname == item.router_target
+  loop: "{{ router_bgp }}"
+  register: cli_result

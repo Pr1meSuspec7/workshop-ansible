@@ -1,0 +1,53 @@
+---
+- name: "CONFIGURING INTERFACES WITH NETCOMMON MODULE"
+  hosts: ios
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+
+
+  tasks:
+
+
+    - name: "Configuring Interfaces"
+      ansible.netcommon.cli_config:
+        config: |
+          interface GigabitEthernet0/1
+           ip address 192.168.12.0 255.255.255.254
+           no shutdown
+          interface GigabitEthernet0/2
+           ip address 192.168.13.0 255.255.255.254
+           no shutdown
+      when: inventory_hostname == 'IOS1'
+
+    - name: "Configuring Interfaces"
+      ansible.netcommon.cli_config:
+        config: |
+          interface GigabitEthernet0/1
+           ip address 192.168.12.1 255.255.255.254
+           no shutdown
+          interface GigabitEthernet0/2
+           ip address 192.168.24.0 255.255.255.254
+           no shutdown
+      when: inventory_hostname == 'IOS2'
+
+    - name: "Configuring Interfaces"
+      ansible.netcommon.cli_config:
+        config: |
+          interface GigabitEthernet0/1
+           ip address 192.168.34.0 255.255.255.254
+           no shutdown
+          interface GigabitEthernet0/2
+           ip address 192.168.13.1 255.255.255.254
+           no shutdown
+      when: inventory_hostname == 'IOS3'
+
+    - name: "Configuring Interfaces"
+      ansible.netcommon.cli_config:
+        config: |
+          interface GigabitEthernet0/1
+           ip address 192.168.34.1 255.255.255.254
+           no shutdown
+          interface GigabitEthernet0/2
+           ip address 192.168.24.1 255.255.255.254
+           no shutdown
+      when: inventory_hostname == 'IOS4'
