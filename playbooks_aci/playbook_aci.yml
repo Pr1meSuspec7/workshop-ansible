@@ -4,6 +4,7 @@
   connection: local
   gather_facts: false
   vars:
+    # yaml macro
     apic_info: &apic_info
       host: "{{ inventory_hostname }}"
       username: "{{ username }}"
