@@ -1,6 +1,6 @@
 ---
 - name: "CONFIGURING BGP WITH ANSIBLE ROLE"
-  hosts: ios
+  hosts: dc
   gather_facts: false
   connection: ansible.netcommon.network_cli
 
@@ -27,7 +27,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS1"
+      when: inventory_hostname == "DC1-R1"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -49,7 +49,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS1"
+      when: inventory_hostname == "DC1-R1"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -71,7 +71,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS2"
+      when: inventory_hostname == "DC1-R2"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -93,7 +93,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS2"
+      when: inventory_hostname == "DC1-R2"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -115,7 +115,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS3"
+      when: inventory_hostname == "DC2-R1"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -137,7 +137,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS3"
+      when: inventory_hostname == "DC2-R1"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -159,7 +159,7 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS4"
+      when: inventory_hostname == "DC2-R2"
 
     - name: "CONFIGURE ROUTER BGP"
       cisco.ios.ios_bgp_global:
@@ -181,4 +181,4 @@
             - connected:
                 set: true
         state: merged
-      when: inventory_hostname == "IOS4"
+      when: inventory_hostname == "DC2-R2"

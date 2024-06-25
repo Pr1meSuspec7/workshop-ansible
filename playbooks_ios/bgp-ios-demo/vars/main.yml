@@ -6,49 +6,49 @@ router_bgp:
     neighbor: 192.168.12.1
     remote_as: 65001
     soft: true
-    router_target: IOS1
+    router_target: DC1-R1
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.12.0
     remote_as: 65001
     soft: true
-    router_target: IOS2
+    router_target: DC1-R2
 
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.34.1
     remote_as: 65001
     soft: true
-    router_target: IOS3
+    router_target: DC2-R1
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.34.0
     remote_as: 65001
     soft: true
-    router_target: IOS4
+    router_target: DC2-R2
 
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.13.1
     remote_as: 65001
     soft: true
-    router_target: IOS1
+    router_target: DC1-R1
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.13.0
     remote_as: 65001
     soft: true
-    router_target: IOS3
+    router_target: DC2-R1
 
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.24.1
     remote_as: 65001
     soft: true
-    router_target: IOS2
+    router_target: DC1-R2
   - as_number: 65001
     router_id: "{{ RID }}"
     neighbor: 192.168.24.0
     remote_as: 65001
     soft: true
-    router_target: IOS4
+    router_target: DC2-R2

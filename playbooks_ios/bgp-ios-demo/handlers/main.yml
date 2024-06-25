@@ -1,0 +1,15 @@
+---
+# handlers file for bgp-ios-demo
+
+- name: Pause
+  ansible.builtin.pause:
+    prompt: "Wait 20 seconds then press enter"
+
+- name: Show BGP summary
+  ansible.netcommon.cli_command:
+    command: show ip bgp summary | begin Neighbor
+  register: cli_result
+
+- name: OUTPUT
+  ansible.builtin.debug:
+    msg: "{{ cli_result.stdout_lines }}"

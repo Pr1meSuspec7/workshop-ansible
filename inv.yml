@@ -5,20 +5,26 @@ all:
     apic:
       hosts:
         apicsim.ntt.lab:
-    ios:
+    dc1:
       hosts:
-        IOS1:
+        DC1-R1:
           ansible_host: 10.164.80.101
           site: Milano
-        IOS2:
+        DC1-R2:
           ansible_host: 10.164.80.102
           site: Roma
-        IOS3:
+    dc2:
+      hosts:
+        DC2-R1:
           ansible_host: 10.164.80.103
           site: Torino
-        IOS4:
+        DC2-R2:
           ansible_host: 10.164.80.104
           site: Venezia
+    dc:
+      children:
+        dc1:
+        dc2:
     nxos:
       hosts:
         10.164.80.104:

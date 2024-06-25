@@ -1,6 +1,6 @@
 ---
 - name: "CONFIGURING INTERFACES WITH NETCOMMON MODULE"
-  hosts: ios
+  hosts: dc
   gather_facts: false
   connection: ansible.netcommon.network_cli
 
@@ -17,7 +17,7 @@
           interface GigabitEthernet0/2
            ip address 192.168.13.0 255.255.255.254
            no shutdown
-      when: inventory_hostname == 'IOS1'
+      when: inventory_hostname == 'DC1-R1'
 
     - name: "Configuring Interfaces"
       ansible.netcommon.cli_config:
@@ -28,7 +28,7 @@
           interface GigabitEthernet0/2
            ip address 192.168.24.0 255.255.255.254
            no shutdown
-      when: inventory_hostname == 'IOS2'
+      when: inventory_hostname == 'DC1-R2'
 
     - name: "Configuring Interfaces"
       ansible.netcommon.cli_config:
@@ -39,7 +39,7 @@
           interface GigabitEthernet0/2
            ip address 192.168.13.1 255.255.255.254
            no shutdown
-      when: inventory_hostname == 'IOS3'
+      when: inventory_hostname == 'DC2-R1'
 
     - name: "Configuring Interfaces"
       ansible.netcommon.cli_config:
@@ -50,4 +50,14 @@
           interface GigabitEthernet0/2
            ip address 192.168.24.1 255.255.255.254
            no shutdown
-      when: inventory_hostname == 'IOS4'
+      when: inventory_hostname == 'DC2-R2'
+
+#    - name: "Show Interfaces"
+#      ansible.netcommon.cli_command:
+#        command: show ip interface brief
+#      register: cli_result
+#
+#    - name: "OUTPUT"
+#      ansible.builtin.debug:
+#        msg: "{{ cli_result }}"
+#        # msg: "{{ cli_result.stdout_lines }}"

@@ -24,3 +24,7 @@
   when: inventory_hostname == item.router_target
   loop: "{{ router_bgp }}"
   register: cli_result
+#  notify:
+#    - Pause 
+#    - Show BGP summary
+#    - OUTPUT
