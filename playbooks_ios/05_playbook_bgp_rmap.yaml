@@ -1,0 +1,42 @@
+---
+- name: "TEST"
+  hosts: "{{ host_var | default([]) }}"
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+
+    - name: Load variables
+      ansible.builtin.include_vars:
+        file: data/switch_configuration.yaml
+        name: switch_configuration
+
+    - name: Merge provided Prefix lists configuration
+      cisco.ios.ios_prefix_lists:
+        config:
+          - afi: ipv4
+            prefix_lists:
+              - name: '{{ item.name }}'
+                entries:
+                  - action: permit
+                    prefix: '{{ item.prefix }}'
+                    sequence: '{{ item.sequence }}'
+      loop: '{{ switch_configuration[inventory_hostname].prefix_lists }}'
+
+    - name: Merge provided Route maps configuration
+      cisco.ios.ios_route_maps:
+        config:
+          - route_map: iBGP-OUT_RMAP
+            entries:
+              - sequence: 10
+                action: permit
+                match:
+                  ip:
+                    address:
+                      prefix_lists:
+                        - LOOPBACK_PREFIX
+
+#    - name: Debug
+#      ansible.builtin.debug:
+#        msg: "{{ item.name }}"
+#      loop: "{{ switch_configuration[inventory_hostname].prefix_lists }}"
