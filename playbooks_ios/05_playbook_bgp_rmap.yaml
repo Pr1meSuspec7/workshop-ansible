@@ -8,8 +8,8 @@
 
     - name: Load variables
       ansible.builtin.include_vars:
-        file: data/switch_configuration.yaml
-        name: switch_configuration
+        file: data/router_configuration.yaml
+        name: router_configuration
 
     - name: Merge provided Prefix lists configuration
       cisco.ios.ios_prefix_lists:
@@ -21,7 +21,7 @@
                   - action: permit
                     prefix: '{{ item.prefix }}'
                     sequence: '{{ item.sequence }}'
-      loop: '{{ switch_configuration[inventory_hostname].prefix_lists }}'
+      loop: '{{ router_configuration[inventory_hostname].prefix_lists }}'
 
     - name: Merge provided Route maps configuration
       cisco.ios.ios_route_maps:
@@ -39,4 +39,4 @@
 #    - name: Debug
 #      ansible.builtin.debug:
 #        msg: "{{ item.name }}"
-#      loop: "{{ switch_configuration[inventory_hostname].prefix_lists }}"
+#      loop: "{{ router_configuration[inventory_hostname].prefix_lists }}"
