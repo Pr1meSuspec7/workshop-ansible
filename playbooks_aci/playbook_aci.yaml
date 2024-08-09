@@ -13,8 +13,8 @@
   vars_files:
     - aci_vars.yaml
 
-  tasks:
 
+  tasks:
 
     - name: Create tenant
       cisco.aci.aci_tenant:
@@ -27,7 +27,6 @@
       tags:
         - tenant
 
-
     - name: Create vrf
       cisco.aci.aci_vrf:
         <<: *apic_info
@@ -39,7 +38,6 @@
         label: "{{ item.1.vrf | default('Missing vrf') }}"
       tags:
         - vrf
-
 
     - name: Create bridge domain
       cisco.aci.aci_bd:
@@ -57,7 +55,6 @@
       tags:
         - bd
 
-
     - name: Create a subnet
       cisco.aci.aci_bd_subnet:
         <<: *apic_info
@@ -74,7 +71,6 @@
       tags:
         - subnet
 
-
     - name: Create application profile
       cisco.aci.aci_ap:
         <<: *apic_info
@@ -86,7 +82,6 @@
         label: "{{ item.1.ap | default('Missing application profile') }}"
       tags:
         - ap
-
 
     - name: Create epg
       cisco.aci.aci_epg:
@@ -101,7 +96,6 @@
         label: "{{ item.1.epg | default('Missing epg') }}"
       tags:
         - epg
-
 
     - name: Add a new physical domain to EPG binding
       cisco.aci.aci_epg_to_domain:
@@ -118,7 +112,6 @@
       tags:
         - domain_to_epg
 
-
     - name: Add a new contract
       cisco.aci.aci_contract:
         <<: *apic_info
@@ -131,7 +124,6 @@
         label: "{{ item.1.contract | default('Missing contract') }}"
       tags:
         - contract
-
 
     - name: Add a new contract subject
       cisco.aci.aci_contract_subject:
@@ -149,7 +141,6 @@
         - contract
         - sbj
 
-
     - name: Add a new filter
       cisco.aci.aci_filter:
         <<: *apic_info
@@ -162,7 +153,6 @@
       tags:
         - contract
         - filter
-
 
     - name: Add a filter entry
       cisco.aci.aci_filter_entry:
@@ -184,7 +174,6 @@
         - contract
         - entry_filter
 
-
     - name: Add a new contract subject to filer binding
       cisco.aci.aci_contract_subject_to_filter:
         <<: *apic_info
@@ -201,7 +190,6 @@
       tags:
         - contract
         - filter_bind
-
 
     - name: Add a new contract to EPG
       cisco.aci.aci_epg_to_contract:
