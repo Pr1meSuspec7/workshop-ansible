@@ -1,20 +1,51 @@
 ---
-tenant:
-  tenant_name: ANSIBLE-WORKSHOP
-  tenant_desc: Deployed by ANSIBLE
+TENANTs:
+  - tenant: # string
+    # descr: string
 
-vrf:
-  vrf_name: ansible_vrf
+    VRFs:
+      - # vrf: string
 
-bd:
-  bd_name: ansible-network-1_bd
-  bd_unicast: no
+    BDs:
+      - # bd: string
+        # vrf: string
+        # arp_flooding: false|true
+        # l2_unknown_unicast: proxy|flood
+        # enable_routing: false|true
+        # gw: 192.168.10.1
+        # mask: 24
+        # preferred: false|true
+        # scope: [public|private, shared]
 
-ap:
-  ap_name: ansible_ap
+    APs:
+      - # ap: string
 
-epg:
-  epg_name:
-    - web
-    - app
-    - db
+    EPGs:
+      - # epg: string
+        # ap: string
+        # descr: string
+        # bd: nstring
+        # domain: string
+        # domain_type: phys|vmm
+
+    CONTRACTs:
+      - # contract: string
+        # scope: application-profile|context|global|tenant
+        # sbj: string
+        # reverse_filter: false|true
+        # apply_both_direction: both|one-way
+        # filter: string
+        # entry: string
+        # ether_type: arp|fcoe|ip|ipv4|ipv6|mac_security|mpls_ucast|trill|unspecified
+        # ip_protocol: icmp|tcp|udp|unspecified|eigrp|egp|icmpv6|igmp|igp|l2tp|ospfigp|pim|
+        # source_port_start: 0-65535
+        # source_port_end: 0-65535
+        # dst_port_start: 0-65535
+        # dst_port_end: 0-65535
+        # action: permit|deny
+
+    CONTRACTtoEPG:
+      - # epg: string
+        # ap: string
+        # contract: string
+        # type: consumer|provider

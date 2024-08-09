@@ -1,0 +1,184 @@
+---
+TENANTs:
+  - tenant: ANSIBLE-WORKSHOP
+    descr: Deployed by Ansible
+
+    VRFs:
+      - vrf: red_vrf
+      - vrf: blu_vrf
+      - vrf: l2only_vrf
+
+    BDs:
+      - bd: net-red-1_bd
+        vrf: red_vrf
+        gw: 192.168.10.1
+        mask: 24
+        preferred: true
+        scope: [public]
+      - bd: net-red-2_bd
+        vrf: red_vrf
+        gw: 192.168.20.1
+        mask: 24
+        preferred: true
+        scope: [public]
+      - bd: net-red-3_bd
+        vrf: red_vrf
+        gw: 192.168.30.1
+        mask: 24
+        preferred: true
+        scope: [public]
+      - bd: net-blu-1_bd
+        vrf: blu_vrf
+        gw: 172.16.10.1
+        mask: 24
+        preferblu: true
+        scope: [public]
+      - bd: net-blu-2_bd
+        vrf: blu_vrf
+        gw: 172.16.20.1
+        mask: 24
+        preferblu: true
+        scope: [public]
+      - bd: net-blu-3_bd
+        vrf: blu_vrf
+        gw: 172.16.30.1
+        mask: 24
+        preferblu: true
+        scope: [public]
+      - bd: sync_bd
+        vrf: l2only_vrf
+        arp_flooding: true
+        l2_unknown_unicast: flood
+        enable_routing: false
+
+    APs:
+      - ap: aapp-profile-red
+      - ap: app-profile-blu
+
+    EPGs:
+      - epg: web-red_epg
+        ap: aapp-profile-red
+        descr: VLAN_10
+        bd: net-red-1_bd
+        domain: Physical_PhysDom
+      - epg: app-red_epg
+        ap: aapp-profile-red
+        descr: VLAN_20
+        bd: net-red-2_bd
+        domain: Physical_PhysDom
+      - epg: database-red_epg
+        ap: aapp-profile-red
+        descr: VLAN_30
+        bd: net-red-3_bd
+        domain: Physical_PhysDom
+      - epg: web-blu_epg
+        ap: app-profile-blu
+        descr: VLAN_10
+        bd: net-blu-1_bd
+        domain: Physical_PhysDom
+      - epg: app-blu_epg
+        ap: app-profile-blu
+        descr: VLAN_20
+        bd: net-blu-2_bd
+        domain: Physical_PhysDom
+      - epg: database-blu_epg
+        ap: app-profile-blu
+        descr: VLAN_30
+        bd: net-blu-3_bd
+        domain: Physical_PhysDom
+
+    CONTRACTs:
+      - contract: red_web_to_app
+        scope: application-profile
+        sbj: red_web_to_app
+        filter: tcp_8443
+        entry: tcp_8443
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 8443
+        dst_port_end: 8443
+        action: permit
+      - contract: red_app_to_db
+        scope: application-profile
+        sbj: red_app_to_db
+        filter: tcp_3306
+        entry: tcp_3306
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 3306
+        dst_port_end: 3306
+        action: permit
+      - contract: red_app_to_db
+        scope: application-profile
+        sbj: red_app_to_db
+        filter: tcp_1521
+        entry: tcp_1521
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 1521
+        dst_port_end: 1521
+        action: permit
+      - contract: blu_web_to_app
+        scope: application-profile
+        sbj: blu_web_to_app
+        filter: tcp_8443
+        entry: tcp_8443
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 8443
+        dst_port_end: 8443
+        action: permit
+      - contract: blu_app_to_db
+        scope: application-profile
+        sbj: blu_app_to_db
+        filter: tcp_3306
+        entry: tcp_3306
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 3306
+        dst_port_end: 3306
+        action: permit
+      - contract: blu_app_to_db
+        scope: application-profile
+        sbj: blu_app_to_db
+        filter: tcp_1521
+        entry: tcp_1521
+        ether_type: ip
+        ip_protocol: tcp
+        dst_port_start: 1521
+        dst_port_end: 1521
+        action: permit
+
+    CONTRACTtoEPG:
+      - epg: web-red_epg
+        ap: app-profile-red
+        contract: red_web_to_app
+        type: consumer
+      - epg: app-red_epg
+        ap: app-profile-red
+        contract: red_web_to_app
+        type: provider
+      - epg: app-red_epg
+        ap: app-profile-red
+        contract: red_app_to_db
+        type: consumer
+      - epg: database-red_epg
+        ap: app-profile-red
+        contract: red_app_to_db
+        type: provider
+      - epg: web-blu_epg
+        ap: app-profile-blu
+        contract: blu_web_to_app
+        type: consumer
+      - epg: app-blu_epg
+        ap: app-profile-blu
+        contract: blu_web_to_app
+        type: provider
+      - epg: app-blu_epg
+        ap: app-profile-blu
+        contract: blu_app_to_db
+        type: consumer
+      - epg: database-blu_epg
+        ap: app-profile-blu
+        contract: blu_app_to_db
+        type: provider

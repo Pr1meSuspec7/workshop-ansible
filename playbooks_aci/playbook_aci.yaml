@@ -1,5 +1,5 @@
 ---
-- name: "PLAY 2: CONFIGURATION ACI FABRIC"
+- name: "CONFIGURATION ACI"
   hosts: apic
   connection: local
   gather_facts: false
@@ -11,171 +11,209 @@
       password: "{{ password }}"
       validate_certs: false
   vars_files:
-    - aci_vars.yml
+    - aci_vars.yaml
 
   tasks:
 
-    - name: "CREATE TENANT"
+
+    - name: Create tenant
       cisco.aci.aci_tenant:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        description: "{{ tenant.tenant_desc }}"
+        tenant: "{{ item.tenant }}"
+        description: "{{ item.descr | default('Deployed by Ansible') }}"
+      loop: "{{ TENANTs }}"
+      loop_control:
+        label: "{{ item.tenant }}"
+      tags:
+        - tenant
 
 
-    - name: "CREATE VRF"
+    - name: Create vrf
       cisco.aci.aci_vrf:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        vrf: "{{ vrf.vrf_name }}"
+        tenant: "{{ item.0.tenant }}"
+        vrf: "{{ item.1.vrf }}"
+      when: item.1.vrf is defined
+      loop: "{{ query('subelements', TENANTs, 'VRFs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.vrf | default('Missing vrf') }}"
+      tags:
+        - vrf
 
 
-    - name: "CREATE BRIDGE DOMAIN"
+    - name: Create bridge domain
       cisco.aci.aci_bd:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        vrf: "{{ vrf.vrf_name }}"
-        bd: "{{ bd.bd_name }}"
-        enable_routing: "{{ bd.bd_unicast }}"
+        tenant: "{{ item.0.tenant }}"
+        vrf: "{{ item.1.vrf }}"
+        bd: "{{ item.1.bd }}"
+        arp_flooding: "{{ item.1.arp_flooding | default(false) }}"
+        l2_unknown_unicast: "{{ item.1.l2_unknown_unicast | default('proxy') }}"
+        enable_routing: "{{ item.1.enable_routing | default(true)}}"
+      when: item.1.bd is defined
+      loop: "{{ query('subelements', TENANTs, 'BDs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.bd | default('Missing bridge domain') }}"
+      tags:
+        - bd
 
 
-    - name: "CREATE APPLICATION PROFILE"
+    - name: Create a subnet
+      cisco.aci.aci_bd_subnet:
+        <<: *apic_info
+        tenant: "{{ item.0.tenant }}"
+        bd: "{{ item.1.bd }}"
+        gateway: "{{ item.1.gw }}"
+        mask: "{{ item.1.mask }}"
+        preferred: "{{ item.1.preferred | default(false) }}"
+        scope: "{{ item.1.scope | default(['private']) }}"
+      when: item.1.gw is defined
+      loop: "{{ query('subelements', TENANTs, 'BDs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.bd | default('No bd') }} -> {{ item.1.gw | default('No subnet') }}/{{ item.1.mask | default('mask') }}"
+      tags:
+        - subnet
+
+
+    - name: Create application profile
       cisco.aci.aci_ap:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
+        tenant: "{{ item.0.tenant }}"
+        ap: "{{ item.1.ap }}"
+      when: item.1.ap is defined
+      loop: "{{ query('subelements', TENANTs, 'APs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.ap | default('Missing application profile') }}"
+      tags:
+        - ap
 
 
-    - name: "CREATE EPGs"
+    - name: Create epg
       cisco.aci.aci_epg:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
-        bd: "{{ bd.bd_name }}"
-        epg: "{{ item }}"
-      with_items: "{{ epg.epg_name }}"
+        tenant: "{{ item.0.tenant }}"
+        ap: "{{ item.1.ap }}"
+        bd: "{{ item.1.bd }}"
+        epg: "{{ item.1.epg }}"
+      when: item.1.epg is defined
+      loop: "{{ query('subelements', TENANTs, 'EPGs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.epg | default('Missing epg') }}"
+      tags:
+        - epg
 
 
-    - name: "CREATE WEB-TO-APP CONTRACT"
+    - name: Add a new physical domain to EPG binding
+      cisco.aci.aci_epg_to_domain:
+        <<: *apic_info
+        tenant: "{{ item.0.tenant }}"
+        ap: "{{ item.1.ap }}"
+        epg: "{{ item.1.epg }}"
+        domain: "{{ item.1.domain }}"
+        domain_type: "{{ item.1.domain_type | default('phys') }}"
+      when: item.1.domain is defined
+      loop: "{{ query('subelements', TENANTs, 'EPGs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.epg | default('Missing EPG') }} -> {{ item.1.domain | default('Missing domain') }}"
+      tags:
+        - domain_to_epg
+
+
+    - name: Add a new contract
       cisco.aci.aci_contract:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: web_to_app_ct
+        tenant: "{{ item.0.tenant }}"
+        contract: "{{ item.1.contract }}"
+        scope: "{{ item.1.scope }}"
+      when: item.1.contract is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.contract | default('Missing contract') }}"
+      tags:
+        - contract
 
 
-    - name: "CREATE WEB-TO-APP SUBJECT"
+    - name: Add a new contract subject
       cisco.aci.aci_contract_subject:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: web_to_app_ct
-        subject: SBJ
-        reverse_filter: true
+        tenant: "{{ item.0.tenant }}"
+        contract: "{{ item.1.contract }}"
+        subject: "{{ item.1.sbj }}"
+        reverse_filter: "{{ item.1.reverse | default(true) }}"
+        apply_both_direction: "{{ item.1.direction | default('both') }}"
+      when: item.1.contract is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.contract | default('Missing contract') }} -> {{ item.1.sbj | default('Missing subject') }}"
+      tags:
+        - contract
+        - sbj
 
 
-    - name: "BIND WEB-TO-APP SBJ + FILT"
-      cisco.aci.aci_contract_subject_to_filter:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: web_to_app_ct
-        subject: SBJ
-        filter: web_to_app_filt
-
-
-    - name: "CREATE WEB-TO-APP FILTER"
+    - name: Add a new filter
       cisco.aci.aci_filter:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        filter: web_to_app_filt
+        tenant: "{{ item.0.tenant }}"
+        filter: "{{ item.1.filter }}"
+      when: item.1.filter is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.filter | default('Missing filter') }}"
+      tags:
+        - contract
+        - filter
 
 
-    - name: "CREATE WEB-TO-APP FILTER ENTRY"
+    - name: Add a filter entry
       cisco.aci.aci_filter_entry:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        filter: web_to_app_filt
-        entry: tomcat
-        ether_type: ip
-        ip_protocol: tcp
-        dst_port: "9090"
+        tenant: "{{ item.0.tenant }}"
+        filter: "{{ item.1.filter }}"
+        entry: "{{ item.1.entry }}"
+        ether_type: "{{ item.1.ether_type }}"
+        ip_protocol: "{{ item.1.ip_protocol }}"
+        source_port_start: "{{ item.1.source_port_start | default(omit) }}"
+        source_port_end: "{{ item.1.source_port_end | default(omit) }}"
+        dst_port_start: "{{ item.1.dst_port_start }}"
+        dst_port_end: "{{ item.1.dst_port_end }}"
+      when: item.1.filter is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.filter | default('Missing filter') }} -> {{ item.1.entry | default('Missing entry') }}"
+      tags:
+        - contract
+        - entry_filter
 
 
-    - name: "CREATE APP-TO-DB CONTRACT"
-      cisco.aci.aci_contract:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: app_to_db_ct
-
-
-    - name: "CREATE APP-TO-DB SUBJECT"
-      cisco.aci.aci_contract_subject:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: app_to_db_ct
-        subject: SBJ
-        reverse_filter: true
-
-
-    - name: "BIND APP-TO-DB SBJ + FILT"
+    - name: Add a new contract subject to filer binding
       cisco.aci.aci_contract_subject_to_filter:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        contract: app_to_db_ct
-        subject: SBJ
-        filter: app_to_db_filt
+        tenant: "{{ item.0.tenant }}"
+        contract: "{{ item.1.contract }}"
+        subject: "{{ item.1.sbj }}"
+        filter: "{{ item.1.filter }}"
+        action: "{{ item.1.action }}"
+        directives: log
+      when: item.1.contract is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTs', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.contract | default('Missing contract') }} -> {{ item.1.action | default('Missing action') }}"
+      tags:
+        - contract
+        - filter_bind
 
 
-    - name: "CREATE APP-TO-DB FILTER"
-      cisco.aci.aci_filter:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        filter: app_to_db_filt
-
-
-    - name: "CREATE APP-TO-DB FILTER ENTRY"
-      cisco.aci.aci_filter_entry:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        filter: app_to_db_filt
-        entry: mysql
-        ether_type: ip
-        ip_protocol: tcp
-        dst_port: "3306"
-
-
-    - name: "INSTALL WEB CONSUMER CONTRACT"
+    - name: Add a new contract to EPG
       cisco.aci.aci_epg_to_contract:
         <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
-        epg: web
-        contract: web_to_app_ct
-        contract_type: consumer
-
-
-    - name: "ISNTALL APP PROVIDER CONTRACT"
-      cisco.aci.aci_epg_to_contract:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
-        epg: app
-        contract: web_to_app_ct
-        contract_type: provider
-
-
-    - name: "INSTALL APP CONSUMER CONTRACT"
-      cisco.aci.aci_epg_to_contract:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
-        epg: app
-        contract: app_to_db_ct
-        contract_type: consumer
-
-
-    - name: "INSTALL DB PROVIDER CONTRACT"
-      cisco.aci.aci_epg_to_contract:
-        <<: *apic_info
-        tenant: "{{ tenant.tenant_name }}"
-        ap: "{{ ap.ap_name }}"
-        epg: db
-        contract: app_to_db_ct
-        contract_type: provider
+        tenant: "{{ item.0.tenant }}"
+        ap: "{{ item.1.ap }}"
+        epg: "{{ item.1.epg }}"
+        contract: "{{ item.1.contract }}"
+        contract_type: "{{ item.1.type }}"
+      when: item.1.type is defined
+      loop: "{{ query('subelements', TENANTs, 'CONTRACTtoEPG', {'skip_missing': True}) }}"
+      loop_control:
+        label: "{{ item.1.epg | default('Missing epg') }} -> {{ item.1.contract | default('Missing contract') }} -> {{ item.1.type | default('Missing type') }}"
+      tags:
+        - contract_to_epg
