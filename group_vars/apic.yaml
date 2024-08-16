@@ -1,5 +1,5 @@
 ---
 username: "admin"
-password: "!v3G@!4@Y"
-#password: "simulator"
+#password: "!v3G@!4@Y"
+password: "simulator"
 ansible_python_interpreter: $(which python)

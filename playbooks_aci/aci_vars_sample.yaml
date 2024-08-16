@@ -52,22 +52,22 @@ TENANTs:
         enable_routing: false
 
     APs:
-      - ap: aapp-profile-red
+      - ap: app-profile-red
       - ap: app-profile-blu
 
     EPGs:
       - epg: web-red_epg
-        ap: aapp-profile-red
+        ap: app-profile-red
         descr: VLAN_10
         bd: net-red-1_bd
         domain: Physical_PhysDom
       - epg: app-red_epg
-        ap: aapp-profile-red
+        ap: app-profile-red
         descr: VLAN_20
         bd: net-red-2_bd
         domain: Physical_PhysDom
       - epg: database-red_epg
-        ap: aapp-profile-red
+        ap: app-profile-red
         descr: VLAN_30
         bd: net-red-3_bd
         domain: Physical_PhysDom
