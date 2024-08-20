@@ -2,7 +2,6 @@
 - name: "CONFIGURING INTERFACES WITH NETCOMMON MODULE"
   hosts: dc
   gather_facts: false
-  connection: ansible.netcommon.network_cli
 
 
   tasks:

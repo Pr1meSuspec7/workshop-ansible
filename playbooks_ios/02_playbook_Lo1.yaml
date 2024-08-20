@@ -1,7 +1,7 @@
 ---
 - name: "CONFIGURING LOOPBACK WITH CISCO IOS MODULES"
   hosts: dc
-  connection: ansible.netcommon.network_cli
+  gather_facts: false
 
 
   tasks:

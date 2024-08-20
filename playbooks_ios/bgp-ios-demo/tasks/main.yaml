@@ -18,7 +18,7 @@
           next_hop_self:
             set: true
           route_maps:
-            - out: True
+            - out: true
               name: iBGP-OUT_RMAP
       redistribute:
         - connected:

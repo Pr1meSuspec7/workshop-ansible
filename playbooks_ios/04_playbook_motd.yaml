@@ -2,7 +2,6 @@
 - name: "CONFIGURING BANNER WITH J2 TEMPLATE"
   hosts: dc
   gather_facts: false
-  connection: ansible.netcommon.network_cli
   vars:
     system_administrator: administrator@acme.com
 
