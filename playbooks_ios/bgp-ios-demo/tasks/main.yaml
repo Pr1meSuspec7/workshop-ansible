@@ -10,16 +10,16 @@
           address: "{{ item.router_id }}"
         log_neighbor_changes: true
       neighbors:
-        - address: "{{ item.neighbor }}"
+        - neighbor_address: "{{ item.neighbor }}"
           remote_as: "{{ item.remote_as }}"
           soft_reconfiguration: "{{ item.soft }}"
           send_community:
             both: true
           next_hop_self:
             set: true
-          route_map:
-            name: iBGP-OUT_RMAP
-            out: True
+          route_maps:
+            - out: True
+              name: iBGP-OUT_RMAP
       redistribute:
         - connected:
             set: true
