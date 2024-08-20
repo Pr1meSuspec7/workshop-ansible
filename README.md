@@ -46,8 +46,6 @@ Sul prompt dovrebbe apparire il nome del virtualenv:<br>
 `$ ansible-galaxy collection install cisco.ios`<br>
 `$ ansible-galaxy collection install ansible.netcommon`
 
-### Installazione VM Cisco csr1000v (facoltativo)
+### Installazione VM Cisco csr1000v (non necessario per il workshop)
 * [Cliccando qui potete scaricare l'immagine Cisco csr1000v](https://software.cisco.com/download/home/284364978/type/282046477/release/Amsterdam-17.3.3)
 * [Cliccando qui trovate il video con le istruzioni per l'installazione](https://www.youtube.com/watch?v=hnD_IKRiAmE)
-
-
