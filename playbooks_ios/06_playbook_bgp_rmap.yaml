@@ -1,7 +1,6 @@
 ---
 - name: "TEST"
   hosts: "{{ host_var | default([]) }}"
-  gather_facts: false
 
   tasks:
 

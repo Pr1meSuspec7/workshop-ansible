@@ -1,7 +1,6 @@
 ---
 - name: "CONFIGURING BANNER WITH J2 TEMPLATE"
   hosts: dc
-  gather_facts: false
   vars:
     system_administrator: administrator@acme.com
 

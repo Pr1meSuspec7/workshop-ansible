@@ -1,7 +1,6 @@
 ---
 - name: "CONFIGURING INTERFACES WITH NETCOMMON MODULE"
   hosts: dc
-  gather_facts: false
 
 
   tasks:

@@ -1,7 +1,6 @@
 ---
 - name: "CONFIGURING LOOPBACK WITH CISCO IOS MODULES"
   hosts: dc
-  gather_facts: false
 
 
   tasks:

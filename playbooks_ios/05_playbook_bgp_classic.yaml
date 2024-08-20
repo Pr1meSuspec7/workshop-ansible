@@ -1,7 +1,6 @@
 ---
 - name: "CONFIGURING BGP WITH ANSIBLE ROLE"
   hosts: dc
-  gather_facts: false
 
 
   tasks:
