@@ -1,0 +1,6 @@
+---
+- name: CONFIGURING OSPF
+  hosts: dc
+
+
+  tasks:
