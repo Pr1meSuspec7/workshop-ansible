@@ -8,12 +8,12 @@ Per poter utilizzare il materiale di questo corso avrete bisogno di:
 *  Python 3.x + modulo virtualenv + modulo paramiko
 *  Configurazione di un virtual environment python
 *  Ansible + moduli necessari
-*  Network devices o simulatori come pnetlab/eve-ng **(facoltativo)**
+*  Network devices o simulatori come pnetlab/eve-ng **(non necessario per il workshop)**
 
 **NOTA:** senza pnetlab/eve-ng potrete testare gli script usando le sandbox di [Cisco Devnet](https://developer.cisco.com/site/sandbox/).
 
 ## Istruzioni
-Una volta installata la VM linux lanciate il terminale e utilizzate i seguenti comandi per configurare il vostro ambiente python:
+Una volta installata la VM linux o WSL lanciate il terminale e utilizzate i seguenti comandi per configurare il vostro ambiente python:
 
 * scaricate nella vostra HOME il repository in formato .tar
 * scompattate il file .tar nella vostra HOME, poi entrate nella cartella "workshop-ansible"<br>
@@ -37,7 +37,7 @@ Sul prompt dovrebbe apparire il nome del virtualenv:<br>
 
 * verificare installazione di Ansible<br>
 `$ ansible --version`<br>
-`ansible [core 2.16.7]`<br>
+`ansible [core 2.17.3]`<br>
 `...`<br>
 
 * installare i moduli Ansible necessari<br>
