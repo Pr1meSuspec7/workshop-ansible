@@ -5,7 +5,6 @@
 
   tasks:
 
-
     - name: "Configuring Interfaces"
       ansible.netcommon.cli_config:
         config: |

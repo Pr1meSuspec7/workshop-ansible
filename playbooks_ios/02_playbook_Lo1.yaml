@@ -5,23 +5,22 @@
 
   tasks:
 
-
     - name: "CREATE LOOPBACK 1"
       cisco.ios.ios_interfaces:
         config:
           - name: Loopback1
 
-# Questo task ha un problema, quale?
-    - name: "IP ADDRESS on Lo1"
-      cisco.ios.ios_l3_interfaces:
-        config:
-          - name: Loopback1
-            ipv4:
-              - address: 1.1.1.1/32
-
+## Questo task ha un problema, quale?
 #    - name: "IP ADDRESS on Lo1"
 #      cisco.ios.ios_l3_interfaces:
 #        config:
 #          - name: Loopback1
 #            ipv4:
-#              - address: "{{ RID }}/32"
+#              - address: 1.1.1.1/32
+
+    - name: "IP ADDRESS on Lo1"
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: Loopback1
+            ipv4:
+              - address: "{{ RID }}/32"

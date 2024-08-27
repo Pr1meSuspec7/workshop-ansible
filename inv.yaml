@@ -25,9 +25,3 @@ all:
       children:
         dc1:
         dc2:
-    nxos:
-      hosts:
-        10.164.80.104:
-    csrv:
-      hosts:
-        10.164.80.105:

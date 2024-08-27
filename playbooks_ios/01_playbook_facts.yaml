@@ -1,6 +1,6 @@
 ---
-- name: "CONFIGURING LOOPBACK WITH CISCO IOS MODULES"
-  hosts: dc
+- name: "GET FACTS"
+  hosts: datacenter
 
 
   tasks:
@@ -8,12 +8,12 @@
     - name: Gather minimal legacy facts
       cisco.ios.ios_facts:
         gather_subset: min
-      register: facts
+      register: output
 
-    - name: Show collected facts
-      ansible.builtin.debug:
-        var: facts
-
-#    - name: Show IOS version
+#    - name: Show collected facts
 #      ansible.builtin.debug:
-#        var: facts.ansible_facts.ansible_net_version
+#        var: output
+
+    - name: Show IOS version
+      ansible.builtin.debug:
+        var: output.ansible_facts.ansible_net_version
