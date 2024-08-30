@@ -1,0 +1,8 @@
+---
+ansible_network_os: ios
+ansible_user: admin
+ansible_password: "admin"
+# https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html
+ansible_connection: ansible.netcommon.network_cli
+#ansible_port: 8181
+ansible_python_interpreter: $(which python)

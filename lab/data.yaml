@@ -71,3 +71,20 @@ DC2-R2:
       area: 0
       address: 0.0.0.0
       wildcard_bits: 255.255.255.255
+
+CSR1k:
+  subinterfaces:
+    - name: GigabitEthernet2.31
+      encap: 31
+      address: 192.168.34.1
+      mask: 255.255.255.254
+    - name: GigabitEthernet3.31
+      encap: 31
+      address: 192.168.24.1
+      mask: 255.255.255.254
+  OSPF:
+    - process_id: 31
+      router_id: 31.31.31.4
+      area: 0
+      address: 0.0.0.0
+      wildcard_bits: 255.255.255.255
